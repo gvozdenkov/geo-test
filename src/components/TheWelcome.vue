@@ -5,54 +5,20 @@ import { ref } from 'vue';
 const event = {
   title: 'My birthday party',
   description: 'Be there!',
-  start: '2025-03-06 18:00:00 +0100',
-  duration: [3, 'hour'],
+  start: '2025-03-06 18:00:00',
+  end: '2025-03-06 19:00:00',
 };
 
-const link = google(event);
-
-if ('geolocation' in navigator) {
-  const options = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0,
-  };
-  // Геолокация доступна
-  navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
-} else {
-  console.log('Геолокация не поддерживается вашим браузером');
-}
-
-const locationStr = ref('');
-
-function successCallback(position) {
-  const latitude = position.coords.latitude;
-  const longitude = position.coords.longitude;
-  locationStr.value = `${latitude}, ${longitude}`;
-  console.log(`Широта: ${latitude}, Долгота: ${longitude}`);
-}
-
-function errorCallback(error) {
-  switch (error.code) {
-    case error.PERMISSION_DENIED:
-      console.log('Пользователь отказал в доступе к геолокации');
-      break;
-    case error.POSITION_UNAVAILABLE:
-      console.log('Информация о местоположении недоступна');
-      break;
-    case error.TIMEOUT:
-      console.log('Запрос на получение местоположения превысил время ожидания');
-      break;
-    case error.UNKNOWN_ERROR:
-      console.log('Произошла неизвестная ошибка');
-      break;
-  }
-}
+const goo = google(event);
+const mail = ics(event);
+const yandex = `https://calendar.yandex.ru/event?title=${event.title}&start=${event.start}&end=${event.end}&description=${event.description}`;
 </script>
 
 <template>
-  <a :href="link">add to Google Calendar</a>
+  <a :href="goo">add to Google Calendar</a>
+  <br />
+  <a :href="yandex">add to Yandex Calendar</a>
+  <br />
+  <a :href="mail">add to Mail Calendar</a>
   <p>{{ link }}</p>
-  <p>location:</p>
-  <p>{{ locationStr }}</p>
 </template>
